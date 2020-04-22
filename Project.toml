@@ -1,0 +1,7 @@
+name = "TeXmath"
+uuid = "6a08ed6d-59f2-481e-a137-9a2a2f38f1bf"
+authors = ["Carlos André Bohn Brandt <andre@cbrandt.com.br>"]
+version = "0.1.0"
+
+[deps]
+KaTeX = "07258bb1-70fb-50ed-9200-988f9681c4d2"
