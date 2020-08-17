@@ -23,10 +23,10 @@ function tmcall(::Op{:log}, args; kwargs...)
 		throw(TooManyArgumentsError(2))
 	end
 
-	if args[end] isa Expr && isoneterm(args)
-		arg = tm(args[end]; kwargs...)
-	else
+	if args[end] isa Expr && parneeded(args[end])
 		arg = tm(:(par($(args[end]))); kwargs...)
+	else
+		arg = tm(args[end]; kwargs...)
 	end
 
 	return opname * arg 

@@ -27,6 +27,7 @@ opin(o::Symbol, ex) = ex == o
 include("lang.jl")
 include("call.jl")
 include("comp.jl")
+include("error.jl")
 include("if.jl")
 include("macros.jl")
 include("ref.jl")

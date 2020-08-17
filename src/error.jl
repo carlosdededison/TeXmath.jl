@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-struct TooManyArguments <: Exception
+struct TooManyArgumentsError <: Exception
 	expected::Integer
+end
+
+struct WrongArgumentTypeError <: Exception
 end

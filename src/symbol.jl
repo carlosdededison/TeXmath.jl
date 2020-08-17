@@ -143,7 +143,7 @@ function tm(s::Symbol; kwargs...)
 	)
 
 	if length(split_str[1]) != 1 &&
-	   !(split_str[1][2:end] in values(unicode_symbols)) &&
+	   !("\\$(split_str[1])" in values(unicode_symbols)) &&
 	   !(split_str[1] in values(unicode_symbols) ||
 	     split_str[1] in values(name_symbols))
 		# make the first argument upright if is more than one character

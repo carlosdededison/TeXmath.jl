@@ -4,4 +4,4 @@ authors = ["Carlos André Bohn Brandt <andre@cbrandt.com.br>"]
 version = "0.1.0"
 
 [deps]
-KaTeX = "07258bb1-70fb-50ed-9200-988f9681c4d2"
+Requires = "ae029012-a4dd-5104-9daa-d747884805df"

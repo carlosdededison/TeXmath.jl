@@ -32,6 +32,39 @@ function tmcall(::Op{:lim}, args; alignat, kwargs...)
 	end
 end
 
+function tmcall(::Op{:int}, args; alignat, kwargs...)
+	if length(args) == 2
+		opname = "\\!\\int\\! "
+	elseif length(args) == 4
+		opname = "\\!\\int_{" *
+			tm(args[3]; alignat=x->false, kwargs...) *
+			"}^{" *
+			tm(args[4]; alignat=x->false, kwargs...) *
+			"}"
+	else
+		throw(TooManyArgumentsError(4))
+	end
+
+	if args[1] isa Expr && parneeded(args[1])
+		arg = tm(:(par($(args[1]))); alignat=alignat, kwargs...)
+	else
+		arg = tm(args[1]; alignat=alignat, kwargs...)
+	end
+
+	if args[2] isa Expr && args[2].head == :vect
+		diferential = "\\,\\mathrm d " *
+		join([tm(a; alignat=x->false, kwargs...) for a in args[2].args], "\\,\\mathrm d ")
+	else
+		try
+			diferential = "\\,\\mathrm d " * tm(args[2]; alignat=x->false, kwargs...)
+		catch
+			throw(WrongArgumentTypeError())
+		end
+	end
+
+	return opname * arg * diferential
+end
+
 function tmcall(::Op{:∘}, args; kwargs...)
 	return join(tm.(args;kwargs...), " \\circ ")
 end
