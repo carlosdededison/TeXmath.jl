@@ -32,6 +32,31 @@ function tmcall(::Op{:lim}, args; alignat, kwargs...)
 	end
 end
 
+function tmcall(::Op{:d}, args; kwargs...)
+	if length(args) != 1
+		throw(TooManyArgumentsError(1))
+	end
+
+	if args[1] isa Expr && parneeded(args[1])
+		result = tm(:(par($(args[1]))); kwargs...)
+	else
+		result = tm(args[1]; kwargs...)
+	end
+
+	return "\\mathrm{d} $result"
+end
+
+function tmcall(::Op{:diff}, args; kwargs...)
+	if length(args) != 2
+		throw(TooManyArgumentsError(2))
+	end
+
+	num = tm(:(d($(args[1]))); kwargs...)
+	den = tm(:(d($(args[2]))); kwargs...)
+
+	return "\\frac{$num}{$den}"
+end
+
 function tmcall(::Op{:int}, args; alignat, kwargs...)
 	if length(args) == 2
 		opname = "\\!\\int\\! "

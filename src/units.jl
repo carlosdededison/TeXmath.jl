@@ -5,7 +5,7 @@ end
 
 # TODO: unit aliases (hr => h, for example)
 
-function tm(n::Unitful.Quantity; kwargs...)
+function tm(n::Unitful.AbstractQuantity; kwargs...)
 
 	function split_exponents(unit)
 		s = split(unit, '^')
@@ -16,7 +16,7 @@ function tm(n::Unitful.Quantity; kwargs...)
 
 	reverse_exponent(unit) = _unit_repr(unit.name, -unit.exp)
 	print_unit(unit::_unit_repr) = unit.exp == 2 ?
-								   "$(unit.name)^{$(unit.exp)}\\!" :
+								   "$(unit.name)^{$(unit.exp)}" :
 								   unit.name
 
 	units = map(split_exponents, split(string(Unitful.unit(n))))
@@ -45,7 +45,7 @@ function tm(n::Unitful.FreeUnits; kwargs...)
 
 	reverse_exponent(unit) = _unit_repr(unit.name, -unit.exp)
 	print_unit(unit::_unit_repr) = unit.exp != 1 ?
-								   "$(unit.name)^{$(unit.exp)}\\!" :
+								   "$(unit.name)^{$(unit.exp)}" :
 								   unit.name
 
 	units = map(split_exponents, split(string(n)))
@@ -59,7 +59,7 @@ function tm(n::Unitful.FreeUnits; kwargs...)
 		unit = join(print_unit.(units), "{\\cdot}")
 	end
 
-	return "\\,\\mathrm{$unit}"
+	return "\\mathrm{$unit}"
 end
 
 

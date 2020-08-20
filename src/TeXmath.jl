@@ -82,17 +82,6 @@ function tm(n::QuoteNode; kwargs...)
 end
 
 
-function tm(v::Vector; alignat=x->false, kwargs...)
-	if length(v) == 0
-		return "\\emptyset"
-	end
-
-	return "\\left\\{~ " *
-		join(tm.(v; alignat=x->false, kwargs...), ",\\, ") *
-		" ~\\right\\}"
-end
-
-
 function tm(arr::Array; alignat=x->false, kwargs...)
 	lines = String[]
 
@@ -126,13 +115,14 @@ function tm(t::Tuple; alignat, kwargs...)
 end
 
 
-texmath = tm
+function tm(exprs::Vector{Expr};
+		    alignat=x->x in [:>, :<, :(>=), :(<=), :(==),
+							 :!=, :≈, :≠, :(=>)],
+		    kwargs...)
+	if length(exprs) == 1
+		return tm(exprs[1]; alignat=alignat, kwargs...)
+	end
 
-
-function texmath_align(exprs::Any;
-					   alignat=x->x in [:>, :<, :(>=), :(<=), :(==),
-										:!=, :≈, :≠, :(=>)],
-					   kwargs...)
 	lines = texmath.(exprs; alignat=alignat, kwargs...)
 	if all(l->count(c->c == '&', l) == 0, lines)
 		return join(lines, "\\\\[1ex]")
@@ -146,4 +136,5 @@ function texmath_align(exprs::Any;
 	return "\\begin{alignedat}{99}$(join(lines, "\\\\"))\\end{alignedat}"
 end
 
+texmath = tm
 end # module

@@ -142,13 +142,13 @@ function tm(s::Symbol; kwargs...)
 		split(string(s), '_')
 	)
 
-	if length(split_str[1]) != 1 &&
-	   !("\\$(split_str[1])" in values(unicode_symbols)) &&
-	   !(split_str[1] in values(unicode_symbols) ||
-	     split_str[1] in values(name_symbols))
-		# make the first argument upright if is more than one character
-		split_str[1] = "\\mathrm{" * split_str[1] * "}"
-	end
+#	if length(split_str[1]) > 1 &&
+#	   !("\\$(split_str[1])" in values(unicode_symbols)) &&
+#	   !(split_str[1] in values(unicode_symbols) ||
+#	     split_str[1] in values(name_symbols))
+#		# make the first argument upright if is more than one character
+#		split_str[1] = "\\mathrm{" * split_str[1] * "}"
+#	end
 
 
 	return join(split_str, "_\\mathrm{") * "}"^(length(split_str) - 1)

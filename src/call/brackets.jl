@@ -46,9 +46,24 @@ end
 
 
 function tmcall(::Op{:par}, args; alignat, kwargs...)
-	return "\\mathopen{}\\left(" *
-		join(texmath.(args; alignat=x->false, kwargs...), ", ") *
-		"\\right)\\mathclose{}"
+	# defaults:
+	op = Dict(:left => "\\mathopen{}\\left(",
+			   :right => "\\right)\\mathclose{}",
+			   :sub => "",
+			   :sup => "")
+
+	normal_args = filter(x ->!(x isa Expr && x.head == :kw), args)
+
+	parameters  = filter(x -> x isa Expr && x.head == :kw, args)
+	for p in parameters
+		op[p.args[1]] = tm(p.args[2]; alignat=x->false, kwargs...)
+	end
+
+	return op[:left] *
+		join(tm.(normal_args; alignat=x->false, kwargs...), ", ") *
+		op[:right] *
+		(isempty(op[:sub]) ? "" : "_{$(op[:sub])}") *
+		(isempty(op[:sup]) ? "" : "^{$(op[:sup])}")
 end
 
 

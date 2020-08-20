@@ -43,12 +43,28 @@ function tmcall(::Op{:(=>)}, args; alignat, kwargs...)
 end
 
 
+function tmcall(::Op{:(∝)}, args; alignat, kwargs...)
+	if alignat(:(∝))
+		return join(tm.(args; alignat=alignat, kwargs...), " &{}\\propto{}& ")
+	else
+		return join(tm.(args; alignat=alignat, kwargs...), " \\propto ")
+	end
+end
+
+
 function tmcall(::Op{:c}, args; kwargs...)
 	if length(args) != 1 throw(TooManyArgumentsError(1)) end
 
 	return "\\ce{" *
 		filter(c->!isspace(c)&&c != '_', string(args[1])) *
 		"}"
+end
+
+
+function tmcall(::Op{:vec}, args; kwargs...)
+	if length(args) != 1 throw(TooManyArgumentsError(1)) end
+
+	return "\\vec{$(tm(args[1]; kwargs...))}"
 end
 
 
