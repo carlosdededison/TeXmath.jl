@@ -80,6 +80,12 @@ function tmcall(::Op{:&}, args; kwargs...)
 end
 
 
+function tmcall(::Op{:dots}, args; kwargs...)
+	if length(args) != 0 throw(TooManyArgumentsError(0)) end
+	return "\\dots "
+end
+
+
 function tmcall(::Op{:|}, args; alignat, kwargs...)
 	return join(tm.(args; alignat=alignat, kwargs...), "&&")
 end
