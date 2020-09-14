@@ -41,6 +41,7 @@ end
 
 
 function tm(ex::Expr; alignat=x->false, kwargs...)
+dump(ex)
 	if ex.head == :call
 		return tmcall(Op(ex.args[1]), ex.args[2:end];
 			          alignat=alignat, kwargs...)
