@@ -90,6 +90,32 @@ function tmcall(::Op{:int}, args; alignat, kwargs...)
 	return opname * arg * diferential
 end
 
+
 function tmcall(::Op{:∘}, args; kwargs...)
 	return join(tm.(args;kwargs...), " \\circ ")
+end
+
+
+function tmcall(::Op{:sum}, args; kwargs...)
+	# defaults:
+	op = Dict(:sub => "",
+			  :sup => "")
+
+	parameters  = filter(x -> x isa Expr && x.head == :kw, args)
+	for p in parameters
+		op[p.args[1]] = tm(p.args[2]; alignat=x->false, kwargs...)
+	end
+
+	args = filter(x ->!(x isa Expr && x.head == :kw), args)
+
+	if length(args) > 3
+		throw(TooManyArgumentsError(3))
+	end
+
+	return "\\operatorname*{\\sum" *
+		((length(args) < 2) ? "" : "_{$(args[2])}") *
+		((length(args) < 3) ? "" : "^{$(args[3])}") *
+		tm(args; alignat=x->false, kwargs...) * "}" *
+		(isempty(op[:sub]) ? "" : "_{$(op[:sub])}") *
+		(isempty(op[:sup]) ? "" : "^{$(op[:sup])}")
 end
