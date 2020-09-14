@@ -32,6 +32,7 @@ function tmcall(::Op{:lim}, args; alignat, kwargs...)
 	end
 end
 
+
 function tmcall(::Op{:d}, args; kwargs...)
 	if length(args) != 1
 		throw(TooManyArgumentsError(1))
@@ -45,6 +46,22 @@ function tmcall(::Op{:d}, args; kwargs...)
 
 	return "\\mathrm{d} $result"
 end
+
+
+function tmcall(::Op{:dot}, args; kwargs...)
+	if length(args) != 1
+		throw(TooManyArgumentsError(1))
+	end
+
+	if args[1] isa Expr && parneeded(args[1])
+		result = tm(:(par($(args[1]))); kwargs...)
+	else
+		result = tm(args[1]; kwargs...)
+	end
+
+	return "{\\dot{$result}}"
+end
+
 
 function tmcall(::Op{:diff}, args; kwargs...)
 	if length(args) != 2
