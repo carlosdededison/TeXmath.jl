@@ -98,3 +98,8 @@ function tmmacro(::Op{Symbol("@subs")}, args; kwargs...)
 
 	return tm(resultexpr; kwargs...)
 end
+
+
+function tmmacro(::Op{Symbol("@L_str")}, args; kwargs...)
+	return args[1]
+end
