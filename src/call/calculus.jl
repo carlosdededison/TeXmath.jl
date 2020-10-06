@@ -82,7 +82,10 @@ function tmcall(::Op{:diff}, args; kwargs...)
 end
 
 function tmcall(::Op{:int}, args; alignat, kwargs...)
-	if length(args) == 2
+	if length(args) == 1
+		opname = "\\!\\int\\! "
+		diferential = ""
+	elseif length(args) == 2
 		opname = "\\!\\int\\! "
 	elseif length(args) == 4
 		opname = "\\!\\int_{" *
@@ -100,14 +103,16 @@ function tmcall(::Op{:int}, args; alignat, kwargs...)
 		arg = tm(args[1]; alignat=alignat, kwargs...)
 	end
 
-	if args[2] isa Expr && args[2].head == :vect
-		diferential = "\\,\\mathrm d " *
-		join([tm(a; alignat=x->false, kwargs...) for a in args[2].args], "\\,\\mathrm d ")
-	else
-		try
-			diferential = "\\,\\mathrm d " * tm(args[2]; alignat=x->false, kwargs...)
-		catch
-			throw(WrongArgumentTypeError())
+	if length(args) != 1
+		if args[2] isa Expr && args[2].head == :vect
+			diferential = "\\,\\mathrm d " *
+			join([tm(a; alignat=x->false, kwargs...) for a in args[2].args], "\\,\\mathrm d ")
+		else
+			try
+				diferential = "\\,\\mathrm d " * tm(args[2]; alignat=x->false, kwargs...)
+			catch
+				throw(WrongArgumentTypeError())
+			end
 		end
 	end
 
