@@ -72,7 +72,7 @@ function tmcall(::Op{:diff}, args; kwargs...)
 		else
 			result = tm(args[1]; kwargs...)
 		end
-		return result * "\\prime"
+		return result * "^\\prime"
 	end
 
 	num = tm(:(d($(args[1]))); kwargs...)
