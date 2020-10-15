@@ -98,7 +98,10 @@ function tmcall(::Op{:int}, args; alignat, kwargs...)
 	end
 
 	if args[1] isa Expr && parneeded(args[1])
-		arg = tm(:(par($(args[1]))); alignat=alignat, kwargs...)
+		arg = tm(
+				 :(par($(args[1]), left=L"\left[", right=L"\right]"));
+				 alignat=alignat, kwargs...
+				)
 	else
 		arg = tm(args[1]; alignat=alignat, kwargs...)
 	end
