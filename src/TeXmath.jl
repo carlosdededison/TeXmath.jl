@@ -59,7 +59,7 @@ function tm(ex::Expr; alignat=x->false, kwargs...)
 			return tm(ex.args[1]; kwargs...)
 		end
 	elseif ex.head in [:hcat, :vcat, :cat, :hvcat]
-		return tm(Base.eval(Main, ex); alignat=alignat, kwargs...)
+		return tm(getfield(Main, Symbol(ex.head))(ex.args); alignat=alignat, kwargs...)
 	elseif ex.head == :if
 		return tmif(ex; kwargs...)
 	elseif ex.head == :toplevel
