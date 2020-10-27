@@ -77,10 +77,8 @@ function tm(ex::Expr; alignat=x->false, kwargs...)
 end
 
 
-function tm(n::QuoteNode; kwargs...)
-	return tm(n.value; kwargs...)
-end
-
+tm(n::QuoteNode; kwargs...) = tm(n.value; kwargs...)
+tm(n::LineNumberNode; kwargs...) = ""
 
 function tm(arr::Array; alignat=x->false, kwargs...)
 	lines = String[]
