@@ -22,3 +22,19 @@ end
 function tmcall(::Op{:parallel}, args; kwargs...)
 	return join(tm.(args;kwargs...), " \\parallel ")
 end
+
+function tmcall(::Op{:proj}, args; kwargs...)
+	if length(args) == 2
+		opname = "\\operatorname{proj_{$(tm(args[1]; kwargs...))}} "
+	else
+		throw(TooManyArgumentsError(2))
+	end
+
+	if args[end] isa Expr && parneeded(args[end])
+		arg = tm(:(par($(args[end]))); kwargs...)
+	else
+		arg = tm(args[end]; kwargs...)
+	end
+
+	return opname * arg 
+end
