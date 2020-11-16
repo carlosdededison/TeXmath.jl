@@ -14,13 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-include("call/basic.jl")
-include("call/brackets.jl")
-include("call/calculus.jl")
-include("call/comparison.jl")
-include("call/conditions.jl")
-include("call/decoration.jl")
-include("call/geometry.jl")
-include("call/log.jl")
-include("call/trigonometry.jl")
-include("call/other.jl")
+
+function tmcall(::Op{:perp}, args; kwargs...)
+	return join(tm.(args;kwargs...), " \\perp ")
+end
+
+function tmcall(::Op{:parallel}, args; kwargs...)
+	return join(tm.(args;kwargs...), " \\parallel ")
+end
