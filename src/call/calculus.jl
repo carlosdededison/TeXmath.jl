@@ -50,7 +50,8 @@ end
 
 function tmcall(::Op{:dot}, args; kwargs...)
 	if length(args) != 1
-		throw(TooManyArgumentsError(1))
+		# dot product
+		return join(tm.(args;kwargs...), " \\cdot ")
 	end
 
 	if args[1] isa Expr && parneeded(args[1])
