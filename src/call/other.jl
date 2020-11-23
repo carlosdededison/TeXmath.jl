@@ -61,6 +61,13 @@ function tmcall(::Op{:c}, args; kwargs...)
 end
 
 
+function tmcall(::Op{:ang}, args; kwargs...)
+	if length(args) != 1 throw(TooManyArgumentsError(1)) end
+
+	return "\\hat{$(tm(args[1]; kwargs...))}"
+end
+
+
 function tmcall(::Op{:vec}, args; kwargs...)
 	if length(args) != 1 throw(TooManyArgumentsError(1)) end
 
