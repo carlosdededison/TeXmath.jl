@@ -60,6 +60,8 @@ function tm(ex::Expr; alignat=x->false, kwargs...)
 		end
 	elseif ex.head in [:hcat, :vcat, :cat, :hvcat]
 		return tm(getfield(Main, Symbol(ex.head))(ex.args); alignat=alignat, kwargs...)
+	elseif ex.head == :&&
+		return join(tm.(ex.args; kwargs...), " \\land ")
 	elseif ex.head == :row
 		return join(tm.(ex.args; kwargs...), " & ")
 	elseif ex.head == :if
