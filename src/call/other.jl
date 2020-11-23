@@ -110,17 +110,32 @@ end
 
 
 function tmcall(::Op{:det}, args; kwargs...)
-	if length(args) != 1 throw(TooManyArgumentsError(1)) end
-	let arr::Array = args[1]
+	function array_render(arr::Array)
+		lines = String[]
 
-	lines = String[]
+		for i in 1:size(arr, 1)
+			row = arr[i,:]
+			push!(lines, join(tm.(row; alignat=x->false, kwargs...), " & "))
+		end
 
-	for i in 1:size(arr, 1)
-		row = arr[i,:]
-		push!(lines, join(tm.(row; alignat=x->false, kwargs...), " & "))
+		return "\\left[\\begin{array}{c}\n\t" *
+		join(lines, "\\\\[1ex]\n\t") *
+		"\n\\end{array}\\right]"
 	end
 
-	return "\\left[\\begin{array}{|ccccc|}\n\t" *
-	join(lines, "\\\\[1ex]\n\t") *
-	"\n\\end{array}\\right]"
+	if length(args) != 1 throw(TooManyArgumentsError(1)) end
+	if args[1] isa Symbol
+		return "\\operatorname{det}(" * tm(args[1]; kwargs...) * ")"
+	elseif args[1] isa Expr && args[1].head == :vcat
+		array = getfield(Main, Symbol(ex.head))(ex.args)
+		return "\\left\\lvert" * array_render(array) * "\\right\\rvert"
+	else
+		error("Wrong type on det() operator")
+	end
 end
+
+
+
+
+
+
