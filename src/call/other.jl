@@ -94,3 +94,9 @@ end
 function tmcall(::Op{:|>}, args; kwargs...)
 	return join(tm.(args; kwargs...), " \\,\\triangleright ")
 end
+
+function tmcall(::Op{:bb}, args; kwargs...)
+	if length(args) != 1 throw(TooManyArgumentsError(1)) end
+
+	return "\\mathbb{" * tm(args[1]; kwargs...) * "}"
+end
