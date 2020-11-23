@@ -107,3 +107,20 @@ function tmcall(::Op{:bb}, args; kwargs...)
 
 	return "\\mathbb{" * tm(args[1]; kwargs...) * "}"
 end
+
+
+function tmcall(::Op{:det}, args; kwargs...)
+	if length(args) != 1 throw(TooManyArgumentsError(1)) end
+	let arr::Array = args[1]
+
+	lines = String[]
+
+	for i in 1:size(arr, 1)
+		row = arr[i,:]
+		push!(lines, join(tm.(row; alignat=x->false, kwargs...), " & "))
+	end
+
+	return "\\left[\\begin{array}{|ccccc|}\n\t" *
+	join(lines, "\\\\[1ex]\n\t") *
+	"\n\\end{array}\\right]"
+end
