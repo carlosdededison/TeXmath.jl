@@ -133,9 +133,3 @@ function tmcall(::Op{:det}, args; kwargs...)
 		error("Wrong type on det() operator")
 	end
 end
-
-
-
-
-
-
