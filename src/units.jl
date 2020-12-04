@@ -24,7 +24,7 @@ function tm(n::Unitful.AbstractQuantity; kwargs...)
 	num_exp_neg = count(x->x.exp<0, units)
 
 	if num_exp_neg == 1
-		unit = join(print_unit.(units[begin:end-1]), "{\\cdot}") *
+		unit = join(print_unit.(units[1:end-1]), "{\\cdot}") *
 				"/" * print_unit(reverse_exponent(units[end]))
 	else
 		unit = join(print_unit.(units), "{\\cdot}")
