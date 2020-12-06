@@ -127,7 +127,7 @@ function tmcall(::Op{:det}, args; kwargs...)
 	if args[1] isa Symbol
 		return "\\operatorname{det}(" * tm(args[1]; kwargs...) * ")"
 	elseif args[1] isa Expr && args[1].head == :vcat
-		array = getfield(Main, Symbol(ex.head))(ex.args)
+		array = getfield(Main, Symbol(args[1].head))(args[1].args)
 		return "\\left\\lvert" * array_render(array) * "\\right\\rvert"
 	else
 		error("Wrong type on det() operator")
