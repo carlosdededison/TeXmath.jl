@@ -89,8 +89,8 @@ function tmcall(::Op{:abs}, args; kwargs...)
 			texmath(args[1];kwargs...) *
 			"\\,\\right)\\right\\rvert\\mathclose{}~"
 	else
-		return "~\\mathopen{}\\left\\lvert\\," *
+		return "\\mathopen{}\\left\\lvert\\," *
 			texmath(args[1];kwargs...) *
-			"\\,\\right\\rvert\\mathclose{}~"
+			"\\,\\right\\rvert\\mathclose{}"
 	end
 end

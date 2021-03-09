@@ -64,8 +64,12 @@ function tmcall(::Op{:*}, args; kwargs...)
 
 	if args[1] isa Real &&
 		all(term, args[2:end]) ||
-		all(term, args)
-		return join(tm.(args; kwargs...), " ")
+		all(term, args) ||
+		(length(args) == 2 &&
+			args[1] isa Real &&
+			args[end] isa Expr &&
+			args[end].head == :macrocall)
+		return join(tm.(args; kwargs...), "\\,")
 	end
 
 	tmp_args = Vector()
@@ -112,12 +116,13 @@ tmcall(::Op{:\}, args; kwargs...) = tmcall(Op(:/), reverse(args); kwargs...)
 function tmcall(::Op{:^}, args; kwargs...)
 	if length(args) != 2 throw(TooManyArgumentsError(2)) end
 	
-	if args[1] isa Expr
+	if args[1] isa Expr && args[1].head != :ref
 		args[1] = :(par($(args[1])))
 	end
 
-	return tm(args[1]; kwargs...) * "^{" *
-		   tm(args[2]; kwargs...) * "}"
+	return "{" *
+		tm(args[1]; kwargs...) * "}^{" *
+		tm(args[2]; kwargs...) * "}"
 end
 
 

@@ -1,68 +1,59 @@
-struct _unit_repr
-	name::AbstractString
-	exp::Integer
-end
+function tm(n::Unitful.FreeUnits{N, D, A}; kwargs...) where {N, D, A}
 
-# TODO: unit aliases (hr => h, for example)
+	positive = String[]
+	negative = String[]
 
-function tm(n::Unitful.AbstractQuantity; kwargs...)
+        for unit in N
+                symbol = Unitful.prefix(unit) * Unitful.abbr(unit)
+                if unit.power == 1
+                        push!(positive, symbol)
+		elseif unit.power > 1
+			if denominator(unit.power) == 1
+				p = tm(numerator(unit.power))
+			else
+				p = tm(unit.power)
+                        end
+			push!(positive, symbol * "^{$p}")
+		elseif unit.power == -1
+			push!(negative, symbol)
+		elseif unit.power < -1
+			if denominator(unit.power) == 1
+				p = tm(-numerator(unit.power))
+			else
+				p = tm(-unit.power)
+                        end
+			push!(negative, symbol * "^{$p}")
+		else # power == 0
+                        # do nothing
+                end
+        end
 
-	function split_exponents(unit)
-		s = split(unit, '^')
-		return length(s) == 2 ?
-			_unit_repr(s[1], parse(Int, s[2])) :
-			_unit_repr(s[1], 1)
-	end
+	if length(positive) == 0
+                negative_units = []
+                for unit in N
+                        symbol = Unitful.prefix(unit) * Unitful.abbr(unit)
 
-	reverse_exponent(unit) = _unit_repr(unit.name, -unit.exp)
-	print_unit(unit::_unit_repr) = unit.exp == 2 ?
-								   "$(unit.name)^{$(unit.exp)}" :
-								   unit.name
+                        if denominator(unit.power) == 1
+				p = tm(numerator(unit.power))
+			else
+				p = tm(unit.power)
+                        end
 
-	units = map(split_exponents, split(string(Unitful.unit(n))))
-	units = sort(units, by=x -> -x.exp)
-	num_exp_neg = count(x->x.exp<0, units)
+                        push!(negative_units, symbol * "^{$p}")
+                end
+		return "\\mathrm{ $(join(negative_units, " \\cdot ")) }"
+        end
 
-	if num_exp_neg == 1
-		unit = join(print_unit.(units[1:end-1]), "{\\cdot}") *
-				"/" * print_unit(reverse_exponent(units[end]))
-	else
-		unit = join(print_unit.(units), "{\\cdot}")
-	end
-
-	return tm(n.val; kwargs...) * "\\,\\mathrm{$unit}"
-end
-
-
-function tm(n::Unitful.FreeUnits; kwargs...)
-
-	function split_exponents(unit)
-		s = split(unit, '^')
-		return length(s) == 2 ?
-			_unit_repr(s[1], parse(Int, s[2])) :
-			_unit_repr(s[1], 1)
-	end
-
-	reverse_exponent(unit) = _unit_repr(unit.name, -unit.exp)
-	print_unit(unit::_unit_repr) = unit.exp != 1 ?
-								   "$(unit.name)^{$(unit.exp)}" :
-								   unit.name
-
-	units = map(split_exponents, split(string(n)))
-	units = sort(units, by=x -> -x.exp)
-	num_exp_neg = count(x->x.exp<0, units)
-
-	if num_exp_neg == 1 && length(units) > 2
-		unit = join(print_unit.(units[1:end-1]), "{\\cdot}") *
-				"/" * print_unit(reverse_exponent(units[end]))
-	else
-		unit = join(print_unit.(units), "{\\cdot}")
-	end
-
-	return "\\mathrm{$unit}"
+	if length(negative) == 0
+		return "\\mathrm{ $(join(positive, " \\cdot ")) }"
+        elseif length(negative) == 1
+		return "\\mathrm{ $(join(positive, " \\cdot ")) / $(negative[1]) }"
+	else # length(negative) > 1
+		return "\\mathrm{ $(join(positive, " \\cdot ")) / ($(join(negative, " \\cdot "))) }"
+        end
 end
 
 
 function tmmacro(::Op{Symbol("@u_str")}, args; kwargs...)
-	tm.(Core.eval(Main, quote @u_str $(args...) end); kwargs...)
+        tm.(Core.eval(Main, quote @u_str $(args...) end); kwargs...)
 end
