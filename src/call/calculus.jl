@@ -148,7 +148,7 @@ function tmcall(::Op{:sum}, args; kwargs...)
 	return "\\operatorname*{\\sum" *
 		((length(args) < 2) ? "" : "_{$(args[2])}") *
 		((length(args) < 3) ? "" : "^{$(args[3])}") *
-		tm(args; alignat=x->false, kwargs...) * "}" *
+		tm(args[1]; alignat=x->false, kwargs...) * "}" *
 		(isempty(op[:sub]) ? "" : "_{$(op[:sub])}") *
 		(isempty(op[:sup]) ? "" : "^{$(op[:sup])}")
 end
