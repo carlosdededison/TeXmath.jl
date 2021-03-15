@@ -54,6 +54,10 @@ function tm(n::Unitful.FreeUnits{N, D, A}; kwargs...) where {N, D, A}
 end
 
 
-function tmmacro(::Op{Symbol("@u_str")}, args; kwargs...)
-        tm.(Core.eval(Main, quote @u_str $(args...) end); kwargs...)
+function tmmacro(::Op{Symbol("@u_str")}, arg; kwargs...)
+	ex = Meta.parse(arg)
+
+	dump(ex)
+
+    #    tm.(Core.eval(Main, quote @u_str $(args...) end); kwargs...)
 end
