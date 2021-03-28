@@ -99,7 +99,27 @@ function tmmacro(::Op{Symbol("@subs")}, args; kwargs...)
 	return tm(resultexpr; kwargs...)
 end
 
-
 function tmmacro(::Op{Symbol("@L_str")}, args; kwargs...)
 	return args[1]
+end
+
+function tmmacro(::Op{Symbol("@u_str")}, args; kwargs...)
+	if length(args) != 1 throw(TooManyArgumentsError(1)) end
+	
+	splitted = split(args[1], "/")
+	if length(splitted) > 2 error("Unit error: no more than one slash is allowed!") end
+	
+	ex = Meta.parse.(splitted)
+
+	if length(ex) == 1
+		return "\\mathrm{" * texmath(ex[1]) * "}"
+	else
+		if ex[2] isa Expr &&
+		   ex[2].args[1] == :(*) && 
+		   length(ex[2].args) > 1
+			return "\\mathrm{" * texmath(ex[1]) * " \\,/\\, (" * texmath(ex[2]) * ")}"
+		else
+			return "\\mathrm{" * texmath(ex[1]) * " \\,/\\, " * texmath(ex[2]) * "}"			
+		end
+	end
 end

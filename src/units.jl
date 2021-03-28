@@ -52,12 +52,3 @@ function tm(n::Unitful.FreeUnits{N, D, A}; kwargs...) where {N, D, A}
 		return "\\mathrm{ $(join(positive, " \\cdot ")) / ($(join(negative, " \\cdot "))) }"
         end
 end
-
-
-function tmmacro(::Op{Symbol("@u_str")}, arg; kwargs...)
-	ex = Meta.parse(arg)
-
-	dump(ex)
-
-    #    tm.(Core.eval(Main, quote @u_str $(args...) end); kwargs...)
-end
