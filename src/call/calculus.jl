@@ -98,7 +98,7 @@ function tmcall(::Op{:int}, args; alignat, kwargs...)
 		throw(TooManyArgumentsError(4))
 	end
 
-	if args[1] isa Expr && parneeded(args[1])
+	if args[1] isa Expr && args[1].args[1] != :* && parneeded(args[1])
 		arg = tm(
 				 :(par($(args[1]), left=L"\left[", right=L"\right]"));
 				 alignat=alignat, kwargs...
