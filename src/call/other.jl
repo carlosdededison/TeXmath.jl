@@ -75,6 +75,13 @@ function tmcall(::Op{:vec}, args; kwargs...)
 end
 
 
+function tmcall(::Op{:bar}, args; kwargs...)
+	if length(args) != 1 throw(TooManyArgumentsError(1)) end
+
+	return "\\bar{$(tm(args[1]; kwargs...))}"
+end
+
+
 function tmcall(::Op{:under}, args; kwargs...)
 	if length(args) != 2 throw(TooManyArgumentsError(2)) end
 
