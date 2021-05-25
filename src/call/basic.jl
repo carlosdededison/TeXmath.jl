@@ -103,6 +103,22 @@ function tmcall(::Op{:times}, args; kwargs...)
 	return join(tm.(tmp_args; kwargs...), " \\times ")
 end
 
+function tmcall(::Op{:(./)}, args; kwargs...)
+	tmp_args = Vector()
+	for a in args # check if parenthesis are needed
+		if ( a isa Expr && a.head == :call &&
+			 a.args[1] in [ :+, :+, :-, :- ]
+		   ) || a isa Real && a < 0
+
+			push!(tmp_args, :(par($a)))
+		else
+			push!(tmp_args, a)
+		end
+	end
+
+	return join(tm.(tmp_args; kwargs...), " / ")
+end
+
 function tmcall(::Op{:/}, args; kwargs...)
 	if length(args) != 2 throw(TooManyArgumentsError(2)) end
 	return "\\frac{" *
