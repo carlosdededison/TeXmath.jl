@@ -134,11 +134,7 @@ function tmcall(::Op{:sum}, args; kwargs...)
 	op = Dict(:sub => "",
 			  :sup => "")
 
-	println("AAAA")
-	dump(args)
-	println("AAAA")
-
-	parameters  = filter(x -> x isa Expr && x.head == :kw, args)
+	parameters = filter(x -> x isa Expr && x.head == :kw, args)
 	for p in parameters
 		op[p.args[1]] = tm(p.args[2]; alignat=x->false, kwargs...)
 	end
@@ -152,7 +148,7 @@ function tmcall(::Op{:sum}, args; kwargs...)
 	return "\\operatorname*{\\sum}" *
 		((length(args) < 2) ? "" : "_{$(tm(args[2]; alignat=x->false, kwargs...))}") *
 		((length(args) < 3) ? "" : "^{$(tm(args[3]; alignat=x->false, kwargs...))}") *
-		tm(args[1]; alignat=x->false, kwargs...) *
 		(isempty(op[:sub]) ? "" : "_{$(op[:sub])}") *
-		(isempty(op[:sup]) ? "" : "^{$(op[:sup])}")
+		(isempty(op[:sup]) ? "" : "^{$(op[:sup])}") *
+		"{" * tm(args[1]; alignat=x->false, kwargs...) * "}"
 end
