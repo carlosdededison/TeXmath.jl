@@ -153,42 +153,6 @@ function tmcall(::Op{:sum}, args; kwargs...)
 		"{" * tm(args[1]; alignat=x->false, kwargs...) * "}"
 end
 
-
-function tmcall(::Op{:diff}, args; kwargs...)
-	if length(args) > 2
-		throw(TooManyArgumentsError(2))
-	elseif length(args) == 1
-		if args[1] isa Expr && parneeded(args[1])
-			result = tm(:(par($(args[1]))); kwargs...)
-		else
-			result = tm(args[1]; kwargs...)
-		end
-		return result * "^\\prime"
-	end
-
-	num = tm(:(d($(args[1]))); kwargs...)
-	den = tm(:(d($(args[2]))); kwargs...)
-
-	return "\\frac{$num}{$den}"
-end
-function tmcall(::Op{:diff}, args; kwargs...)
-	if length(args) > 2
-		throw(TooManyArgumentsError(2))
-	elseif length(args) == 1
-		if args[1] isa Expr && parneeded(args[1])
-			result = tm(:(par($(args[1]))); kwargs...)
-		else
-			result = tm(args[1]; kwargs...)
-		end
-		return result * "^\\prime"
-	end
-
-	num = tm(:(d($(args[1]))); kwargs...)
-	den = tm(:(d($(args[2]))); kwargs...)
-
-	return "\\frac{$num}{$den}"
-end
-
 function tmcall(::Op{:Delta}, args; kwargs...)
 	if length(args) != 2
 		throw(TooManyArgumentsError(1))
