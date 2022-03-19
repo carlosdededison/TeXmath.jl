@@ -145,7 +145,7 @@ function tmcall(::Op{:sum}, args; kwargs...)
 		throw(TooManyArgumentsError(3))
 	end
 
-	return "\\operatorname*{\\sum}" *
+	return "\\operatorname*{\\sum}\\limits" *
 		((length(args) < 2) ? "" : "_{$(tm(args[2]; alignat=x->false, kwargs...))}") *
 		((length(args) < 3) ? "" : "^{$(tm(args[3]; alignat=x->false, kwargs...))}") *
 		(isempty(op[:sub]) ? "" : "_{$(op[:sub])}") *
