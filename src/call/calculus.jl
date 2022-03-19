@@ -154,7 +154,7 @@ function tmcall(::Op{:sum}, args; kwargs...)
 end
 
 function tmcall(::Op{:Delta}, args; kwargs...)
-	if length(args) != 2
+	if length(args) != 1
 		throw(TooManyArgumentsError(1))
 	end
 
