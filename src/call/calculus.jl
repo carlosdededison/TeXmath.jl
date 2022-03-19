@@ -158,5 +158,5 @@ function tmcall(::Op{:Delta}, args; kwargs...)
 		throw(TooManyArgumentsError(1))
 	end
 
-	return "\\Delta{$(args[1])}"
+	return "\\Delta{$(tm(args[1]; alignat=x->false, kwargs...))}"
 end
