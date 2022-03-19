@@ -134,6 +134,10 @@ function tmcall(::Op{:sum}, args; kwargs...)
 	op = Dict(:sub => "",
 			  :sup => "")
 
+	println("AAAA")
+	dump(args)
+	println("AAAA")
+
 	parameters  = filter(x -> x isa Expr && x.head == :kw, args)
 	for p in parameters
 		op[p.args[1]] = tm(p.args[2]; alignat=x->false, kwargs...)
