@@ -28,11 +28,21 @@ end
 function tmcall(::Op{:-}, args; alignat=x->false, kwargs...)
 	if length(args) == 1 # negative number
 		return " -" * tm(args[1])
+	elseif length(args) > 2 # more than 2 arguments should not happen
+		throw(TooManyArgumentsError(2))
 	else # subtraction
 		if alignat(:-)
 			return join(tm.(args; alignat=alignat, kwargs...), " &{}-{}& ")
 		else
-			return join(tm.(args; kwargs...), " - ")
+			arg2 = if args[2] isa Expr
+					:(par($(args[2])))
+			else
+					args[2]
+			end
+
+			return tm(args[1]; alignat=alignat, kwargs...) *
+             " - " *
+			       tm(arg2; alignat=alignat, kwargs...)
 		end
 	end
 end

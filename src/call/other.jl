@@ -85,7 +85,7 @@ end
 function tmcall(::Op{:under}, args; kwargs...)
 	if length(args) != 2 throw(TooManyArgumentsError(2)) end
 
-	return "\\underbrace{$(tm(args[1]; kwargs...))}_{$(tm(args[2]; kwargs...))}"
+	return "\\underbrace{$(tm(args[1]; kwargs...))}_\\text{$(args[2])}"
 end
 
 
