@@ -119,7 +119,7 @@ const unicode_symbols = Dict{Char, String}(
     '‰' => "\\perthousand",
     '‱' => "\\pertenthousand",
 	'∞' => "\\infty",
-	'′' => "^\\prime"
+	'′' => "{}^\\prime"
 )
 
 
