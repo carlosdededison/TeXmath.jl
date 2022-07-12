@@ -160,3 +160,8 @@ function tmcall(::Op{:Delta}, args; kwargs...)
 
 	return "\\Delta{$(tm(args[1]; alignat=x->false, kwargs...))}"
 end
+
+function tmcall(::Op{:max}, args; kwargs...)
+	argument = join(tm.(args; alignat=x->false, kwargs...), ", ")
+	return "\\max\\left( $argument \\right)"
+end
