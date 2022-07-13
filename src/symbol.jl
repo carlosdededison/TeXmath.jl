@@ -56,6 +56,7 @@ const name_symbols = Dict{String, String}(
 	"infty"     => "\\infty",
 	"<="        => "\\,\\leqslant\\,",
 	">="        => "\\,\\geqslant\\,",
+	"diam"      => "⌀",
 )
 
 const unicode_symbols = Dict{Char, String}(
