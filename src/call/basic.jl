@@ -147,7 +147,7 @@ end
 
 function tmcall(::Op{:/}, args; kwargs...)
 	if length(args) != 2 throw(TooManyArgumentsError(2)) end
-	return "\\frac{" *
+	return "\\dfrac{" *
 		tm(args[1]; kwargs...) * "}{" *
 		tm(args[2]; kwargs...) * "}"
 end
